@@ -13,5 +13,5 @@ data = {
         },
     ]
 }
-with open("task.json", "w", encoding="utf-8") as f:
+with open("src/task.json", "w", encoding="utf-8") as f:
     json.dump(data, f)
