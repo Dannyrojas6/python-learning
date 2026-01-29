@@ -19,6 +19,7 @@ from pathlib import Path
 # with open("src/task.json", "a", encoding="utf-8") as f:
 #     json.dump(data_format, f)
 
+data: dict = {"tasks": []}
 if Path("src/task.json").exists():
     id = int(input("Task id: "))
     content = input("content: ")
