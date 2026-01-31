@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+from rich.console import Console
+from rich.table import Table
 
 
 def add_func():
@@ -8,7 +10,7 @@ def add_func():
         id = int(input("Task id: "))
         content = input("content: ")
         done = input("done: ").strip().lower() == "true"
-        created_date = str(input("created_date: "))
+        created_date = input("created_date: ")
 
         with open("src/task.json") as f:
             try:
@@ -57,16 +59,28 @@ def add_func():
 def list_func():
     with open("src/task.json", encoding="utf-8") as f:
         data = json.load(f)
-        for i in data["tasks"]:
-            tem_list = []
-            for j in i.values():
-                tem_list.append(j)
-            print(
-                f"id:{tem_list[0]},content:{tem_list[1]},done:{tem_list[2]},created_date:{tem_list[3]}"
+        # for i in data["tasks"]:
+        #     tem_list = []
+        #     for j in i.values():
+        #         tem_list.append(j)
+        #     print(
+        #         f"id:{tem_list[0]},content:{tem_list[1]},done:{tem_list[2]},created_date:{tem_list[3]}"
+        #     )
+        table = Table()
+        console = Console()
+        table.add_column("ID")
+        table.add_column("内容")
+        table.add_column("完成状态")
+        table.add_column("创建日期")
+
+        for task in data["tasks"]:
+            status = "✅" if task["done"] else "❌"
+            table.add_row(
+                str(task["id"]), task["content"], status, task["created_date"]
             )
+        console.print(table)
 
 
-#
 # def display_func():
 #     with open("src/task.json", encoding="utf-8") as f:
 #         data = json.load(f)
@@ -89,7 +103,7 @@ def done_func(arg):
 
         tasks = data["tasks"]
         for task in tasks:
-            if task["id"] == arg:
+            if int(task["id"]) == arg:
                 task["done"] = not task["done"]
 
     with open("src/task.json", "w", encoding="utf-8") as f:
@@ -99,7 +113,7 @@ def done_func(arg):
 def remove_func(arg):
     with open("src/task.json", "r", encoding="utf-8") as f:
         data = json.load(f)
-        data["tasks"] = [task for task in data["tasks"] if task["id"] != arg]
+        data["tasks"] = [task for task in data["tasks"] if int(task["id"]) != arg]
     with open("src/task.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
