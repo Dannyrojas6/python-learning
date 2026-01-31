@@ -1,0 +1,22 @@
+{
+    "tasks": [
+        {
+            "id": 1,
+            "content": "buy milk",
+            "done": true,
+            "created_date": "2000-01-01"
+        },
+        {
+            "id": 2,
+            "content": "play minecraft",
+            "done": false,
+            "created_date": "2001-01-01"
+        },
+        {
+            "id": 3,
+            "content": "listen to music",
+            "done": false,
+            "created_date": "1999-09-09"
+        }
+    ]
+}

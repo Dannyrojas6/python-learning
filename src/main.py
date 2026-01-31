@@ -66,10 +66,12 @@ def list_func():
             )
 
 
-def display_func():
-    with open("src/task.json", encoding="utf-8") as f:
-        data = json.load(f)
-        print(data)
+#
+# def display_func():
+#     with open("src/task.json", encoding="utf-8") as f:
+#         data = json.load(f)
+#         print(data)
+#
 
 
 def done_func(arg):
@@ -79,10 +81,17 @@ def done_func(arg):
         #     if value["done"][arg]=="False":
         #         data["tasks"][arg]=="True"
         # data_dict = data["tasks"]
-        try:
-            data["tasks"][arg]["done"] = True
-        except Exception as e:
-            print(f"Error!reason:({e})")
+
+        # try:
+        #     data["tasks"][arg]["done"] = True
+        # except Exception as e:
+        #     print(f"Error!reason:({e})")
+
+        tasks = data["tasks"]
+        for task in tasks:
+            if task["id"] == arg:
+                task["done"] = not task["done"]
+
     with open("src/task.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
@@ -90,13 +99,7 @@ def done_func(arg):
 def remove_func(arg):
     with open("src/task.json", "r", encoding="utf-8") as f:
         data = json.load(f)
-        # for key, value in enumerate(data_dit):
-        #     if value["id"] == 1:
-        #         data_dit.pop(key)
-        #         break
-        # print(data_dit)
         data["tasks"] = [task for task in data["tasks"] if task["id"] != arg]
-        # print(data)
     with open("src/task.json", "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
@@ -107,19 +110,19 @@ def main():
         print("1.添加任务")
         print("2.删除任务")
         print("3.列出所有任务")
-        print("4.标记任务完成")
+        print("4.切换任务完成状态")
         print("0.退出")
         arg = int(input("请输入功能编号："))
         match arg:
             case 1:
                 add_func()
             case 2:
-                remove_index = int(input("请输入想要删除的任务编号："))
+                remove_index = int(input("请输入任务编号："))
                 remove_func(remove_index)
             case 3:
                 list_func()
             case 4:
-                done_index = int(input("请输入标记完成任务的编号："))
+                done_index = int(input("请输入任务编号："))
                 done_func(done_index)
             case 0:
                 break
