@@ -17,12 +17,6 @@
             "content": "listen to music",
             "done": true,
             "date": "1999-09-09"
-        },
-        {
-            "id": 4,
-            "content": "test 4",
-            "done": false,
-            "date": "2026-02-01"
         }
     ]
 }

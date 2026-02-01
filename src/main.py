@@ -41,8 +41,8 @@ def init():
 
 def load_tasks():
     if not Path("src/task.json").exists():
-        console.print("文件不存在！")
-        return None
+        console.print("文件不存在！将自动生成文件。")
+        init()
     try:
         with open("src/task.json", "r") as f:
             return json.load(f)
@@ -62,8 +62,6 @@ def add(
     done: bool = False,
     date: Optional[str] = date.today().isoformat(),
 ):
-    if not Path("src/task.json").exists():
-        init()
     data = load_tasks()
     if data is None:
         console.print("读取文件失败！文件为空。")
@@ -104,7 +102,7 @@ def clear():
     if data is None:
         console.print("读取文件失败！文件为空。")
         return
-    data["tasks"] = [task for task in data["tasks"] if task["id"] is int]
+    data["tasks"] = []
     save_tasks(data)
 
 
@@ -130,6 +128,60 @@ def remove(task_id: int):
         return
     data["tasks"] = [task for task in data["tasks"] if task["id"] != task_id]
     save_tasks(data)
+
+
+@app.command()
+def search(keyword: str):
+    data = load_tasks()
+    if data is None:
+        return
+    resaults = [
+        task for task in data["tasks"] if keyword.lower() in task["content"].lower()
+    ]
+
+    table = Table()
+    table.add_column("ID")
+    table.add_column("内容")
+    table.add_column("完成状态")
+    table.add_column("创建日期")
+
+    for task in resaults:
+        status = "✅" if task["done"] else "❌"
+        table.add_row(str(task["id"]), task["content"], status, task["date"])
+    console.print(table)
+
+
+@app.command()
+def edit(
+    id: int,
+    content: Optional[str] = None,
+    done: Optional[str] = None,
+    date: Optional[str] = None,
+):
+    data = load_tasks()
+    if data is None:
+        console.print("读取文件失败！文件为空。")
+        return
+    for task in data["tasks"]:
+        if task["id"] == id:
+            if content is not None:
+                task["content"] = content
+            if done is not None:
+                if done.lower() in "true":
+                    task["done"] = True
+                elif done.lower() in "false":
+                    task["done"] = False
+                else:
+                    console.print("完成状态输入有误！请重试。")
+                    return
+            if date is not None:
+                task["date"] = date
+    save_tasks(data)
+
+
+@app.command()
+def test():
+    init()
 
 
 if __name__ == "__main__":
